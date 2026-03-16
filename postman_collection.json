@@ -1,0 +1,199 @@
+{
+  "info": {
+    "_postman_id": "6f7f62f6-0f57-4f85-91c7-2f71bb8a3b1f",
+    "name": "Role-based Food Ordering Backend (Minimal)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" },
+    { "key": "restaurantId", "value": "r1" },
+    { "key": "orderId", "value": "o1" }
+  ],
+  "item": [
+    {
+      "name": "Auth - Login (Nick Fury / Admin)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('token', json.token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"1\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "Me",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/me",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "me"]
+        }
+      }
+    },
+    {
+      "name": "Restaurants (country-scoped for non-admin)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/restaurants",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "restaurants"]
+        }
+      }
+    },
+    {
+      "name": "Restaurant Menu",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/restaurants/{{restaurantId}}/menu",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "restaurants", "{{restaurantId}}", "menu"]
+        }
+      }
+    },
+    {
+      "name": "Create Order (DRAFT)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('orderId', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"restaurantId\": \"{{restaurantId}}\",\n  \"items\": [\n    { \"menuItemId\": \"m1\", \"quantity\": 2 },\n    { \"menuItemId\": \"m2\", \"quantity\": 3 }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders"]
+        }
+      }
+    },
+    {
+      "name": "Orders - List",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders"]
+        }
+      }
+    },
+    {
+      "name": "Orders - Get by ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/orders/{{orderId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders", "{{orderId}}"]
+        }
+      }
+    },
+    {
+      "name": "Orders - Checkout (place order)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paymentMethodId\": \"pm1\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders/{{orderId}}/checkout",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders", "{{orderId}}", "checkout"]
+        }
+      }
+    },
+    {
+      "name": "Orders - Cancel",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/orders/{{orderId}}/cancel",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders", "{{orderId}}", "cancel"]
+        }
+      }
+    },
+    {
+      "name": "Payment Methods - List",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "{{baseUrl}}/api/payment-methods",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payment-methods"]
+        }
+      }
+    },
+    {
+      "name": "Payment Methods - Replace (Admin only)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"methods\": [\n    { \"id\": \"pm1\", \"type\": \"CARD\", \"details\": \"VISA **** 1111\" },\n    { \"id\": \"pm2\", \"type\": \"UPI\", \"details\": \"nick@newupi\" }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/payment-methods",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payment-methods"]
+        }
+      }
+    }
+  ]
+}
+

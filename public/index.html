@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Ordering (RBAC)</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="container">
+        <div class="row space">
+          <div class="row" style="gap: 10px">
+            <h1>Food Ordering</h1>
+            <span id="userPill" class="pill" style="display: none"></span>
+          </div>
+          <div class="row">
+            <button id="logoutBtn" class="secondary" style="display: none">Logout</button>
+          </div>
+        </div>
+        <div class="muted small">RBAC + Country access (India / America)</div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="toast" class="toast" style="display: none"></div>
+
+      <div id="loginCard" class="card">
+        <h2>Login (mock users)</h2>
+        <div class="row">
+          <select id="userSelect">
+            <option value="1">Nick Fury (ADMIN)</option>
+            <option value="2">Captain Marvel (MANAGER - INDIA)</option>
+            <option value="3">Captain America (MANAGER - AMERICA)</option>
+            <option value="4">Thanos (MEMBER - INDIA)</option>
+            <option value="5">Thor (MEMBER - INDIA)</option>
+            <option value="6">Travis (MEMBER - AMERICA)</option>
+          </select>
+          <button id="loginBtn">Login</button>
+        </div>
+        <div class="muted small" style="margin-top: 8px">
+          This UI uses your backend’s <code>/api/auth/login</code> and stores the JWT in localStorage.
+        </div>
+      </div>
+
+      <div id="app" style="display: none; margin-top: 12px" class="grid two">
+        <div class="card">
+          <div class="row space">
+            <h2>Restaurants</h2>
+            <button id="refreshRestaurantsBtn" class="secondary">Refresh</button>
+          </div>
+          <div id="restaurants" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h2>Cart / Order</h2>
+          <div class="muted small" style="margin-bottom: 8px">
+            Members can create drafts, but cannot checkout/cancel.
+          </div>
+
+          <div id="menuSection" style="display: none">
+            <div class="row space" style="margin-bottom: 8px">
+              <div>
+                <div class="small muted">Selected restaurant</div>
+                <div id="selectedRestaurantName" style="font-weight: 600"></div>
+              </div>
+              <button id="clearCartBtn" class="secondary">Clear</button>
+            </div>
+            <div id="menu" class="list"></div>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 12px 0" />
+          </div>
+
+          <div class="row space" style="margin-bottom: 8px">
+            <div>
+              <div class="small muted">Total</div>
+              <div id="cartTotal" style="font-weight: 700">0</div>
+            </div>
+            <button id="createOrderBtn">Create DRAFT Order</button>
+          </div>
+
+          <div id="orderSection" style="display: none; margin-top: 10px">
+            <div class="row space">
+              <div>
+                <div class="small muted">Order</div>
+                <div><span id="orderId"></span> <span id="orderStatus" class="pill"></span></div>
+              </div>
+              <div class="row">
+                <button id="checkoutBtn">Checkout</button>
+                <button id="cancelBtn" class="danger">Cancel</button>
+              </div>
+            </div>
+            <div style="margin-top: 10px">
+              <div class="small muted">Payment method</div>
+              <select id="paymentMethodSelect"></select>
+            </div>
+          </div>
+
+          <div id="adminPaymentCard" class="card" style="margin-top: 12px; display: none">
+            <h2>Admin: Payment Methods</h2>
+            <div class="muted small" style="margin-bottom: 8px">
+              Replace payment methods (Admin-only endpoint).
+            </div>
+            <div class="row" style="align-items: flex-end">
+              <div style="flex: 1">
+                <div class="small muted">Methods JSON</div>
+                <input id="pmJson" style="width: 100%" />
+              </div>
+              <button id="updatePmBtn">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
+

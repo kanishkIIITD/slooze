@@ -23,7 +23,7 @@ All data (users, restaurants, menu items, orders, payment methods) is kept in-me
 
 ### Installation
 
-1. Open a terminal in the project root (`c:\Work\Web Project\test`).
+1. Open a terminal in the project root.
 2. Install dependencies:
 
 ```bash
